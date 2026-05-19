@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lab Strategist</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="top-bar">
+        <div class="brand-block">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 64 64">
+              <path d="M20 8h24v8l-8 14v20a8 8 0 0 1-16 0V30l-8-14V8Z" />
+              <path d="M20 8h24" />
+              <path d="M22 38h20" />
+              <circle cx="28" cy="47" r="2" />
+              <circle cx="36" cy="43" r="2" />
+            </svg>
+          </div>
+          <div>
+            <h1>Lab Strategist</h1>
+            <p>Gra dydaktyczna do składania metody analitycznej</p>
+          </div>
+        </div>
+
+        <section class="task-strip" aria-label="Wybór zadania">
+          <label class="field-label" for="scenarioSelect">Oznaczenie</label>
+          <div class="scenario-picker">
+            <select id="scenarioSelect"></select>
+            <button class="icon-action" id="randomScenarioBtn" type="button" aria-label="Losuj metodę" title="Losuj metodę">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M16 3h5v5" />
+                <path d="M4 20 21 3" />
+                <path d="M21 16v5h-5" />
+                <path d="M15 15l6 6" />
+                <path d="M4 4l5 5" />
+              </svg>
+            </button>
+          </div>
+          <div class="answer-row">
+            <span class="answer-label">Wymagane elementy</span>
+            <div class="answer-list" id="answerList"></div>
+          </div>
+          <div class="scenario-facts">
+            <span><b>Matryca:</b> <strong id="matrixText"></strong></span>
+            <span><b>Anality:</b> <strong id="analytesText"></strong></span>
+          </div>
+        </section>
+      </header>
+
+      <aside class="reservoir-area" aria-label="Zasobniki">
+        <div class="panel-head">
+          <div>
+            <span class="caption">Zasobniki</span>
+            <h2>Magazyn gry</h2>
+          </div>
+          <div class="search-wrap">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="7" />
+              <path d="m20 20-3.5-3.5" />
+            </svg>
+            <input id="searchInput" type="search" placeholder="Szukaj" />
+          </div>
+        </div>
+        <div class="stage-tabs" id="categoryTabs" role="tablist"></div>
+        <div class="reservoir-grid" id="materialGrid"></div>
+      </aside>
+
+      <section class="workspace-area" aria-label="Pole robocze">
+        <header class="workspace-header">
+          <div>
+            <span class="caption">Pole robocze</span>
+            <h2>Metoda analityczna</h2>
+          </div>
+          <div class="stage-count" id="selectedCount">0 elementów</div>
+        </header>
+
+        <div class="method-board" id="methodBoard"></div>
+      </section>
+
+      <aside class="evaluation-area" aria-label="Ocena">
+        <section class="score-panel" aria-labelledby="score-title">
+          <h2 id="score-title">Ocena zestawu</h2>
+          <div class="score-ring" id="scoreRing" style="--score-pct: 0%">
+            <span id="scoreValue">0</span>
+            <small>/100</small>
+          </div>
+          <button class="primary-action" id="evaluateBtn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M20 6 9 17l-5-5" />
+            </svg>
+            Gotowe
+          </button>
+          <button class="ghost-action" id="resetBtn" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 12a9 9 0 1 0 3-6.7" />
+              <path d="M3 4v6h6" />
+            </svg>
+            Wyczyść
+          </button>
+        </section>
+
+        <section class="feedback-panel" aria-labelledby="feedback-title">
+          <div class="feedback-head">
+            <h2 id="feedback-title">Komentarz dydaktyczny</h2>
+            <span id="verdictBadge" class="verdict-badge">Nieocenione</span>
+          </div>
+          <div id="feedbackList" class="feedback-list">
+            <p>Wybierz elementy zestawu i uruchom ocenę.</p>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <template id="materialTemplate">
+      <article class="material-card" draggable="true">
+        <div class="material-art"></div>
+        <h3></h3>
+        <p></p>
+        <div class="card-meta"></div>
+        <button class="icon-button add-button" type="button" aria-label="Dodaj">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v14" />
+            <path d="M5 12h14" />
+          </svg>
+        </button>
+      </article>
+    </template>
+
+    <template id="stageTemplate">
+      <section class="method-stage">
+        <header>
+          <div class="stage-icon"></div>
+          <div>
+            <span class="caption"></span>
+            <h3></h3>
+          </div>
+        </header>
+        <div class="stage-dropzone"></div>
+      </section>
+    </template>
+
+    <template id="selectedTemplate">
+      <article class="selected-card">
+        <div class="selected-art"></div>
+        <div>
+          <h3></h3>
+          <p></p>
+        </div>
+        <button class="icon-button remove-button" type="button" aria-label="Usuń">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M18 6 6 18" />
+            <path d="m6 6 12 12" />
+          </svg>
+        </button>
+      </article>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
