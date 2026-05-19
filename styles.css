@@ -24,7 +24,8 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background:
     linear-gradient(135deg, rgba(15, 118, 110, 0.08), transparent 36%),
     linear-gradient(315deg, rgba(37, 99, 235, 0.08), transparent 38%),
@@ -80,10 +81,11 @@ p {
 .app-shell {
   display: grid;
   grid-template-columns: minmax(270px, 330px) minmax(480px, 1fr) minmax(280px, 350px);
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 16px;
-  min-height: 100vh;
+  height: 100vh;
   padding: 16px;
+  overflow: hidden;
 }
 
 .top-bar {
@@ -115,6 +117,17 @@ p {
 .brand-block p {
   margin-top: 5px;
   font-size: 13px;
+}
+
+.version-label {
+  display: inline-block;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: #edf3f7;
+  color: #405164;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 800;
 }
 
 .brand-mark,
@@ -173,6 +186,7 @@ select {
 
 .answer-row {
   grid-column: 1 / -1;
+  grid-row: 4;
   display: grid;
   grid-template-columns: minmax(190px, 260px) max-content minmax(0, 1fr);
   gap: 8px;
@@ -260,11 +274,12 @@ input:focus {
 .workspace-area,
 .evaluation-area {
   min-width: 0;
+  min-height: 0;
 }
 
 .reservoir-area {
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto auto minmax(0, 1fr);
   gap: 12px;
   padding: 14px;
   overflow: hidden;
@@ -359,6 +374,10 @@ input:focus {
   opacity: 0.55;
 }
 
+.selected-card.dragging {
+  opacity: 0.55;
+}
+
 .material-art {
   width: 86px;
   height: 70px;
@@ -433,10 +452,11 @@ input:focus {
 
 .workspace-area {
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 12px;
   padding: 14px;
   overflow: hidden;
+  min-height: 0;
 }
 
 .stage-count,
@@ -452,11 +472,34 @@ input:focus {
 
 .method-board {
   display: grid;
-  grid-template-columns: repeat(5, minmax(var(--method-column-width), 1fr));
+  grid-template-columns: repeat(4, minmax(var(--method-column-width), 1fr));
   justify-content: center;
   gap: 10px;
-  min-height: 570px;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
   overflow: auto;
+  align-items: start;
+}
+
+.analyte-note {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  justify-self: stretch;
+  width: 100%;
+  max-width: none;
+  border: 1px solid rgba(15, 118, 110, 0.22);
+  border-left: 4px solid var(--teal);
+  border-radius: 8px;
+  background: #f0fdfa;
+  color: #233240;
+  padding: 10px 12px;
+  font-size: 13px;
+  line-height: 1.42;
+}
+
+.analyte-note strong {
+  color: var(--teal);
 }
 
 .method-stage {
@@ -465,6 +508,7 @@ input:focus {
   gap: 10px;
   min-width: 0;
   min-height: 100%;
+  height: max-content;
   border: 1px dashed #a8bac8;
   border-radius: 8px;
   background:
@@ -508,6 +552,9 @@ input:focus {
 }
 
 .method-stage header {
+  position: sticky;
+  top: 0;
+  z-index: 8;
   display: grid;
   grid-template-columns: 42px 1fr;
   gap: 8px;
@@ -515,6 +562,12 @@ input:focus {
   min-height: 56px;
   cursor: pointer;
   border-radius: 8px;
+  background: rgba(249, 252, 253, 0.96);
+  box-shadow: 0 8px 16px rgba(22, 42, 58, 0.08);
+}
+
+.method-stage.special header {
+  background: rgba(219, 234, 254, 0.96);
 }
 
 .method-stage header:hover h3 {
@@ -607,6 +660,7 @@ input:focus {
   display: grid;
   align-content: start;
   gap: 14px;
+  overflow: auto;
 }
 
 .score-panel,
@@ -714,6 +768,82 @@ input:focus {
 .feedback-item p {
   margin-top: 2px;
   font-size: 13px;
+}
+
+.celebration {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.celebration[hidden] {
+  display: none;
+}
+
+.celebration-card {
+  display: grid;
+  gap: 5px;
+  min-width: 260px;
+  border: 1px solid rgba(15, 118, 110, 0.35);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 24px 70px rgba(22, 42, 58, 0.22);
+  padding: 18px 22px;
+  text-align: center;
+  animation: celebration-pop 3600ms ease both;
+}
+
+.celebration-card strong {
+  color: var(--teal);
+  font-size: 24px;
+}
+
+.celebration-card span {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+.confetti-piece {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9px;
+  height: 16px;
+  border-radius: 3px;
+  background: var(--piece-color);
+  transform: translate(-50%, -50%);
+  animation: confetti-flight 2800ms ease-out forwards;
+}
+
+@keyframes celebration-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.88);
+  }
+  14%,
+  78% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+}
+
+@keyframes confetti-flight {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(var(--r)) scale(0.7);
+  }
 }
 
 @media (max-width: 1220px) {
