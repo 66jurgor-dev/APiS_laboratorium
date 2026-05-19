@@ -174,26 +174,27 @@ select {
 .answer-row {
   grid-column: 1 / -1;
   display: grid;
-  grid-template-columns: 170px minmax(0, 1fr);
+  grid-template-columns: minmax(190px, 260px) max-content minmax(0, 1fr);
   gap: 8px;
   align-items: start;
+  justify-items: start;
 }
 
-.answer-label {
-  display: grid;
-  align-items: center;
+.answer-row input {
+  padding-left: 12px;
+}
+
+.compact-action {
   min-height: 42px;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #edf3f7;
-  color: #405164;
+  width: auto;
+  justify-self: start;
   padding: 0 12px;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .answer-list {
+  grid-column: 1 / -1;
+  width: 100%;
   min-height: 42px;
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -202,6 +203,13 @@ select {
   padding: 10px 12px;
   font-size: 13px;
   line-height: 1.35;
+}
+
+.answer-list.denied {
+  border-color: rgba(190, 18, 60, 0.35);
+  background: var(--rose-soft);
+  color: var(--rose);
+  font-weight: 800;
 }
 
 input {
