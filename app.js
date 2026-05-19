@@ -1249,6 +1249,8 @@ const methodBoard = document.querySelector("#methodBoard");
 const selectedCount = document.querySelector("#selectedCount");
 const scenarioSelect = document.querySelector("#scenarioSelect");
 const randomScenarioBtn = document.querySelector("#randomScenarioBtn");
+const answerCodeInput = document.querySelector("#answerCodeInput");
+const showAnswerBtn = document.querySelector("#showAnswerBtn");
 const answerList = document.querySelector("#answerList");
 const matrixText = document.querySelector("#matrixText");
 const analytesText = document.querySelector("#analytesText");
@@ -1286,15 +1288,30 @@ function renderScenario() {
   const scenario = getScenario();
   matrixText.textContent = scenario.matrix;
   analytesText.textContent = scenario.analytes;
-  showRequiredElements();
+  hideAnswers();
   clearEvaluation();
 }
 
+function hideAnswers() {
+  answerList.hidden = true;
+  answerList.classList.remove("denied");
+  answerList.textContent = "";
+  answerCodeInput.value = "";
+}
+
 function showRequiredElements() {
+  answerList.hidden = false;
+  if (answerCodeInput.value !== "WEiP") {
+    answerList.classList.add("denied");
+    answerList.textContent = "Nieprawidłowe hasło.";
+    return;
+  }
+
   const scenario = getScenario();
   const names = scenario.requiredIds
     .map((id) => materials.find((material) => material.id === id)?.name)
     .filter(Boolean);
+  answerList.classList.remove("denied");
   answerList.textContent = names.join(", ");
 }
 
@@ -1543,6 +1560,10 @@ function clearEvaluation() {
 }
 
 document.querySelector("#evaluateBtn").addEventListener("click", () => evaluate(true));
+showAnswerBtn.addEventListener("click", showRequiredElements);
+answerCodeInput.addEventListener("keydown", (event) => {
+  if (event.key === "Enter") showRequiredElements();
+});
 randomScenarioBtn.addEventListener("click", () => {
   if (scenarios.length < 2) return;
   const current = scenarioSelect.value;
