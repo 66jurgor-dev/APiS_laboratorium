@@ -48,11 +48,10 @@ const drawingSet = {
 };
 
 const stages = [
-  { id: "sampling", label: "Pobranie i zabezpieczenie próbki", short: "Etap 1", drawing: "soilProbe" },
-  { id: "storage", label: "Transport i przechowywanie", short: "Etap 2", drawing: "cooler" },
-  { id: "prep", label: "Przygotowanie do analizy", short: "Etap 3", drawing: "microwave" },
+  { id: "sampling", label: "Pobranie / zabezpieczenie / transport próbki", short: "Etap 1", drawing: "soilProbe" },
+  { id: "prep", label: "Przygotowanie do analizy", short: "Etap 2", drawing: "microwave" },
   { id: "measurement", label: "Pomiar", short: "Start", drawing: "icp", special: true },
-  { id: "quality", label: "Oznaczenie i kontrola jakości", short: "Etap 4", drawing: "standards" },
+  { id: "quality", label: "Oznaczenie i kontrola jakości", short: "Etap 3", drawing: "standards" },
 ];
 
 const reservoirs = [
@@ -67,17 +66,17 @@ const materials = [
   { id: "reagent", category: "materials", defaultStage: "prep", drawing: "reagent", name: "Odczynnik", desc: "Reakcja barwna lub mineralizacja.", cost: 100, risk: 2 },
   { id: "impinger", category: "materials", defaultStage: "sampling", drawing: "bottle", name: "Płuczka (impinger)", desc: "Pochłanianie składników gazowych.", cost: 150, risk: 1 },
   { id: "lle", category: "materials", defaultStage: "prep", drawing: "filter", name: "Lejek rozdzielczy (LLE)", desc: "Ekstrakcja ciecz-ciecz.", cost: 200, risk: 1 },
-  { id: "ph-electrode", category: "materials", defaultStage: "measurement", drawing: "electrode", name: "Elektroda pH", desc: "Oznaczanie odczynu.", cost: 200, risk: 0 },
+  { id: "ph-electrode", category: "materials", defaultStage: "measurement", acceptedStages: ["measurement", "prep"], drawing: "electrode", name: "Elektroda pH", desc: "Oznaczanie odczynu.", cost: 200, risk: 0 },
   { id: "gas-pipette", category: "materials", defaultStage: "sampling", drawing: "pipette", name: "Pipeta gazowa", desc: "Pobór lub dozowanie próbek gazu.", cost: 250, risk: 1 },
   { id: "soil-auger", category: "materials", defaultStage: "sampling", drawing: "soilProbe", name: "Laska Egnera / świder", desc: "Pobór gleby i gazów glebowych.", cost: 300, risk: 1 },
-  { id: "conductivity-electrode", category: "materials", defaultStage: "measurement", drawing: "electrode", name: "Elektroda konduktometryczna", desc: "Pomiar przewodności.", cost: 300, risk: 0 },
+  { id: "conductivity-electrode", category: "materials", defaultStage: "measurement", acceptedStages: ["measurement", "prep"], drawing: "electrode", name: "Elektroda konduktometryczna", desc: "Pomiar przewodności.", cost: 300, risk: 0 },
   { id: "sorbent-trap", category: "materials", defaultStage: "sampling", drawing: "sorbent", name: "Pułapka z sorbentem", desc: "Zatrzymuje LZO do analizy TD-GC-MS.", cost: 300, risk: 1 },
-  { id: "ise-electrode", category: "materials", defaultStage: "measurement", drawing: "electrode", name: "Elektroda jonoselektywna (ISE)", desc: "Potencjometria wybranego jonu.", cost: 400, risk: 0 },
-  { id: "trap-heater", category: "materials", defaultStage: "prep", drawing: "transferLine", name: "Grzałka do pułapek", desc: "Podgrzewanie pułapek sorpcyjnych.", cost: 400, risk: 1 },
-  { id: "pipette", category: "materials", defaultStage: "prep", drawing: "pipette", name: "Pipeta automatyczna", desc: "Dozowanie próbek i odczynników.", cost: 500, risk: 0 },
+  { id: "ise-electrode", category: "materials", defaultStage: "measurement", acceptedStages: ["measurement", "prep"], drawing: "electrode", name: "Elektroda jonoselektywna (ISE)", desc: "Potencjometria wybranego jonu.", cost: 400, risk: 0 },
+  { id: "trap-heater", category: "materials", defaultStage: "prep", acceptedStages: ["sampling", "prep", "measurement"], drawing: "transferLine", name: "Grzałka do pułapek", desc: "Podgrzewanie pułapek sorpcyjnych.", cost: 400, risk: 1 },
+  { id: "pipette", category: "materials", defaultStage: "prep", acceptedStages: ["prep", "measurement"], drawing: "pipette", name: "Pipeta automatyczna", desc: "Dozowanie próbek i odczynników.", cost: 500, risk: 0 },
   { id: "sieves", category: "materials", defaultStage: "prep", drawing: "filter", name: "Zestaw sit", desc: "Frakcjonowanie i przygotowanie materiału stałego.", cost: 600, risk: 0 },
   { id: "filter", category: "materials", defaultStage: "prep", drawing: "filter", name: "Zestaw filtracyjny próżniowy", desc: "Przygotowanie próbek wodnych.", cost: 700, risk: 0 },
-  { id: "stirrer", category: "materials", defaultStage: "prep", drawing: "stirrer", name: "Mieszadło magnetyczne", desc: "Stabilizuje pomiar elektrochemiczny.", cost: 800, risk: 0 },
+  { id: "stirrer", category: "materials", defaultStage: "prep", acceptedStages: ["prep", "measurement"], drawing: "stirrer", name: "Mieszadło magnetyczne", desc: "Stabilizuje pomiar elektrochemiczny.", cost: 800, risk: 0 },
   { id: "standards", category: "quality", defaultStage: "quality", drawing: "standards", name: "Wzorce + CRM", desc: "Kalibracja i kontrola jakości.", cost: 900, risk: 0 },
   { id: "calibration-curve", category: "quality", defaultStage: "quality", drawing: "standards", name: "Metoda prostej kalibracyjnej", desc: "Oznaczenie z krzywej wzorcowej.", cost: 0, risk: 0 },
   { id: "standard-addition", category: "quality", defaultStage: "quality", drawing: "standards", name: "Metoda dodatku wzorca", desc: "Korekta wpływu matrycy próbki.", cost: 0, risk: 0 },
@@ -91,7 +90,7 @@ const materials = [
   { id: "drying-oven", category: "materials", defaultStage: "prep", drawing: "oven", name: "Suszarka laboratoryjna", desc: "Suszenie materiału stałego.", cost: 3000, risk: 1 },
   { id: "van-veen", category: "materials", defaultStage: "sampling", drawing: "soilProbe", name: "Próbnik van Veena", desc: "Pobór osadów dennych.", cost: 4000, risk: 2 },
   { id: "balance", category: "materials", defaultStage: "prep", drawing: "balance", name: "Waga analityczna", desc: "Odważka próbki do mineralizacji.", cost: 4000, risk: 0 },
-  { id: "heated-line", category: "materials", defaultStage: "storage", drawing: "transferLine", name: "Grzana linia transferowa z filtrem (30 m)", desc: "Transfer gazów bez kondensacji.", cost: 4500, risk: 2 },
+  { id: "heated-line", category: "materials", defaultStage: "sampling", drawing: "transferLine", name: "Grzana linia transferowa z filtrem (30 m)", desc: "Transfer gazów bez kondensacji.", cost: 4500, risk: 2 },
   { id: "centrifuge", category: "materials", defaultStage: "prep", drawing: "mill", name: "Wirówka laboratoryjna", desc: "Oddzielanie faz lub zawiesin.", cost: 5000, risk: 1 },
   { id: "lyophilizer", category: "materials", defaultStage: "prep", drawing: "oven", name: "Liofilizator", desc: "Suszenie przez wymrażanie.", cost: 5000, risk: 1 },
   { id: "microwave", category: "materials", defaultStage: "prep", drawing: "microwave", name: "Mineralizator mikrofalowy", desc: "Roztwarzanie próbek przed AAS/ICP.", cost: 9000, risk: 3 },
@@ -110,7 +109,7 @@ const materials = [
     "code": "E1",
     "name": "E1 - Kontrola odczynu wody powierzchniowej – rzeka Prądnik",
     "matrix": "Woda",
-    "analytes": "Odczynu wody powierzchniowej – rzeka Prądnik",
+    "analytes": "Odczyn pH",
     "quality": "CX-401 – potencjometria, pH",
     "status": "podstawowa",
     "requiredIds": [
@@ -129,7 +128,7 @@ const materials = [
     "code": "E2",
     "name": "E2 - Ocena mineralizacji wody gruntowej – okolice Olkusza",
     "matrix": "Woda",
-    "analytes": "Mineralizacji wody gruntowej – okolice Olkusza",
+    "analytes": "Przewodność elektrolityczna",
     "quality": "CX-401 – konduktometria",
     "status": "podstawowa",
     "requiredIds": [
@@ -148,7 +147,7 @@ const materials = [
     "code": "E3",
     "name": "E3 - Wstępna kwalifikacja wody zbiornika – Zbiornik Dobczycki",
     "matrix": "Woda",
-    "analytes": "Wstępna kwalifikacja wody zbiornika – Zbiornik Dobczycki",
+    "analytes": "Odczyn pH",
     "quality": "CX-401 – potencjometria, pH",
     "status": "podstawowa",
     "requiredIds": [
@@ -167,7 +166,7 @@ const materials = [
     "code": "I4",
     "name": "I4 - Kontrola pH ścieku technologicznego – Strefa Przemysłowa Skawina",
     "matrix": "Ściek",
-    "analytes": "PH ścieku technologicznego – Strefa Przemysłowa Skawina",
+    "analytes": "Odczyn pH",
     "quality": "CX-401 – potencjometria, pH",
     "status": "podstawowa",
     "requiredIds": [
@@ -186,7 +185,7 @@ const materials = [
     "code": "I5",
     "name": "I5 - Kontrola przewodności wody obiegowej – elektrociepłownia Łęg",
     "matrix": "Woda",
-    "analytes": "Przewodności wody obiegowej – elektrociepłownia Łęg",
+    "analytes": "Przewodność elektrolityczna",
     "quality": "CX-401 – konduktometria",
     "status": "podstawowa",
     "requiredIds": [
@@ -205,7 +204,7 @@ const materials = [
     "code": "I6",
     "name": "I6 - Oznaczenie jonów w ścieku laboratoryjnym – kampus akademicki Kraków",
     "matrix": "Ściek",
-    "analytes": "Jonów",
+    "analytes": "Jony",
     "quality": "CX-401 – potencjometria z ISE",
     "status": "podstawowa",
     "requiredIds": [
@@ -224,7 +223,7 @@ const materials = [
     "code": "E7",
     "name": "E7 - Kontrola przewodności wody rzecznej – rzeka Raba",
     "matrix": "Woda",
-    "analytes": "Przewodności wody rzecznej – rzeka Raba",
+    "analytes": "Przewodność elektrolityczna",
     "quality": "CX-401 – konduktometria",
     "status": "podstawowa",
     "requiredIds": [
@@ -243,7 +242,7 @@ const materials = [
     "code": "E8",
     "name": "E8 - Oznaczenie azotanów w wodzie powierzchniowej – rzeka Wisła",
     "matrix": "Woda",
-    "analytes": "Azotanów",
+    "analytes": "Azotany",
     "quality": "UV–Vis – redukcja kadmowa i reakcja Griessa",
     "status": "podstawowa",
     "requiredIds": [
@@ -262,7 +261,7 @@ const materials = [
     "code": "E8A",
     "name": "E8A - Oznaczenie azotanów w wodzie powierzchniowej – rzeka Wisła (A)",
     "matrix": "Woda",
-    "analytes": "Azotanów",
+    "analytes": "Azotany",
     "quality": "CX-401 – ISE dla azotanów",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -281,7 +280,7 @@ const materials = [
     "code": "E9",
     "name": "E9 - Oznaczenie fosforanów w wodzie zbiornika – Zbiornik Czorsztyński",
     "matrix": "Woda",
-    "analytes": "Fosforanów",
+    "analytes": "Fosforany",
     "quality": "UV–Vis – metoda molibdenianowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -300,7 +299,7 @@ const materials = [
     "code": "E10",
     "name": "E10 - Oznaczenie żelaza ogólnego w wodzie gruntowej – rejon Bochni",
     "matrix": "Woda",
-    "analytes": "Żelaza ogólnego",
+    "analytes": "Żelazo ogólne",
     "quality": "UV–Vis – metoda 1,10-fenantrolinowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -318,7 +317,7 @@ const materials = [
     "code": "E10A",
     "name": "E10A - Oznaczenie żelaza ogólnego w wodzie gruntowej – rejon Bochni (A)",
     "matrix": "Woda",
-    "analytes": "Żelaza ogólnego",
+    "analytes": "Żelazo ogólne",
     "quality": "AAS – Fe",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -337,7 +336,7 @@ const materials = [
     "code": "E10B",
     "name": "E10B - Oznaczenie żelaza ogólnego w wodzie gruntowej – rejon Bochni (B)",
     "matrix": "Woda",
-    "analytes": "Żelaza ogólnego",
+    "analytes": "Żelazo ogólne",
     "quality": "ICP-OES – Fe",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -356,7 +355,7 @@ const materials = [
     "code": "I11",
     "name": "I11 - Kontrola fenoli w ścieku przemysłowym – zakład chemiczny Oświęcim",
     "matrix": "Ściek",
-    "analytes": "Fenoli",
+    "analytes": "Fenole",
     "quality": "UV–Vis – metoda 4-AAP",
     "status": "podstawowa",
     "requiredIds": [
@@ -375,7 +374,7 @@ const materials = [
     "code": "I12",
     "name": "I12 - Oznaczenie chromu(VI) w ścieku technologicznym – galwanizernia Kraków",
     "matrix": "Ściek",
-    "analytes": "Chromu(VI)",
+    "analytes": "Chrom(VI)",
     "quality": "UV–Vis – metoda DPC",
     "status": "podstawowa",
     "requiredIds": [
@@ -394,7 +393,7 @@ const materials = [
     "code": "E13",
     "name": "E13 - Oznaczenie barwy wody po uzdatnianiu – SUW Raba",
     "matrix": "Woda",
-    "analytes": "Barwy wody",
+    "analytes": "Barwa wody",
     "quality": "UV–Vis – metoda Pt-Co / Hazen",
     "status": "podstawowa",
     "requiredIds": [
@@ -411,7 +410,7 @@ const materials = [
     "code": "I14",
     "name": "I14 - Kontrola związków organicznych w wodzie obiegowej – elektrociepłownia Skawina",
     "matrix": "Woda",
-    "analytes": "Związków organicznych",
+    "analytes": "Związki organiczne absorbujące UV",
     "quality": "UV–Vis – UV254",
     "status": "podstawowa",
     "requiredIds": [
@@ -428,7 +427,7 @@ const materials = [
     "code": "E15",
     "name": "E15 - Oznaczenie manganu w wodzie surowej – ujęcie Krzeszowice",
     "matrix": "Woda",
-    "analytes": "Manganu",
+    "analytes": "Mangan",
     "quality": "UV–Vis – metoda PAN lub Mn(VII)",
     "status": "podstawowa",
     "requiredIds": [
@@ -447,7 +446,7 @@ const materials = [
     "code": "E15A",
     "name": "E15A - Oznaczenie manganu w wodzie surowej – ujęcie Krzeszowice (A)",
     "matrix": "Woda",
-    "analytes": "Manganu",
+    "analytes": "Mangan",
     "quality": "AAS – Mn",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -466,7 +465,7 @@ const materials = [
     "code": "E15B",
     "name": "E15B - Oznaczenie manganu w wodzie surowej – ujęcie Krzeszowice (B)",
     "matrix": "Woda",
-    "analytes": "Manganu",
+    "analytes": "Mangan",
     "quality": "ICP-OES – Mn",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -485,7 +484,7 @@ const materials = [
     "code": "E17",
     "name": "E17 - Oznaczenie ołowiu w glebie z terenu zielonego – park miejski Kraków",
     "matrix": "Gleba",
-    "analytes": "Ołowiu",
+    "analytes": "Ołów",
     "quality": "AAS – Pb po mineralizacji gleby",
     "status": "podstawowa",
     "requiredIds": [
@@ -506,7 +505,7 @@ const materials = [
     "code": "E17A",
     "name": "E17A - Oznaczenie ołowiu w glebie z terenu zielonego – park miejski Kraków (A)",
     "matrix": "Gleba",
-    "analytes": "Ołowiu",
+    "analytes": "Ołów",
     "quality": "ICP-OES – Pb",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -527,7 +526,7 @@ const materials = [
     "code": "E18",
     "name": "E18 - Oznaczenie kadmu w osadach dennych – rzeka Skawa",
     "matrix": "Osady",
-    "analytes": "Kadmu",
+    "analytes": "Kadm",
     "quality": "AAS – Cd po mineralizacji osadów",
     "status": "podstawowa",
     "requiredIds": [
@@ -548,7 +547,7 @@ const materials = [
     "code": "E18A",
     "name": "E18A - Oznaczenie kadmu w osadach dennych – rzeka Skawa (A)",
     "matrix": "Osady",
-    "analytes": "Kadmu",
+    "analytes": "Kadm",
     "quality": "ICP-OES – Cd",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -569,7 +568,7 @@ const materials = [
     "code": "E19",
     "name": "E19 - Oznaczenie cynku w glebie rolniczej – okolice Proszowic",
     "matrix": "Gleba",
-    "analytes": "Cynku",
+    "analytes": "Cynk",
     "quality": "AAS – Zn po mineralizacji gleby",
     "status": "podstawowa",
     "requiredIds": [
@@ -590,7 +589,7 @@ const materials = [
     "code": "E19A",
     "name": "E19A - Oznaczenie cynku w glebie rolniczej – okolice Proszowic (A)",
     "matrix": "Gleba",
-    "analytes": "Cynku",
+    "analytes": "Cynk",
     "quality": "ICP-OES – Zn",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -611,7 +610,7 @@ const materials = [
     "code": "I20",
     "name": "I20 - Oznaczenie niklu w ścieku przemysłowym – zakład metalowy Skawina",
     "matrix": "Ściek",
-    "analytes": "Niklu",
+    "analytes": "Nikiel",
     "quality": "AAS – Ni po mineralizacji cieczy",
     "status": "podstawowa",
     "requiredIds": [
@@ -630,7 +629,7 @@ const materials = [
     "code": "I20A",
     "name": "I20A - Oznaczenie niklu w ścieku przemysłowym – zakład metalowy Skawina (A)",
     "matrix": "Ściek",
-    "analytes": "Niklu",
+    "analytes": "Nikiel",
     "quality": "ICP-OES – Ni",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -649,7 +648,7 @@ const materials = [
     "code": "I21",
     "name": "I21 - Oznaczenie miedzi w ścieku technologicznym – galwanizernia Nowa Huta",
     "matrix": "Ściek",
-    "analytes": "Miedzi",
+    "analytes": "Miedź",
     "quality": "AAS – Cu po mineralizacji cieczy",
     "status": "podstawowa",
     "requiredIds": [
@@ -668,7 +667,7 @@ const materials = [
     "code": "I21A",
     "name": "I21A - Oznaczenie miedzi w ścieku technologicznym – galwanizernia Nowa Huta (A)",
     "matrix": "Ściek",
-    "analytes": "Miedzi",
+    "analytes": "Miedź",
     "quality": "ICP-OES – Cu",
     "status": "wariant alternatywny",
     "requiredIds": [
@@ -687,7 +686,7 @@ const materials = [
     "code": "I22",
     "name": "I22 - Identyfikacja składników gazowych w spalinach kotła – ciepłownia miejska",
     "matrix": "Spaliny",
-    "analytes": "Składników gazowych",
+    "analytes": "Składniki gazowe",
     "quality": "FTIR – analiza gazów spalinowych",
     "status": "podstawowa",
     "requiredIds": [
@@ -702,7 +701,7 @@ const materials = [
     "code": "I23",
     "name": "I23 - Kontrola emisji gazowych z instalacji technologicznej – zakład chemiczny Tarnów",
     "matrix": "Gaz",
-    "analytes": "Emisji gazowych",
+    "analytes": "Składniki gazowe",
     "quality": "FTIR – identyfikacja składników gazowych",
     "status": "podstawowa",
     "requiredIds": [
@@ -717,7 +716,7 @@ const materials = [
     "code": "E24",
     "name": "E24 - Charakterystyka gazów glebowych – Pustynia Błędowska",
     "matrix": "Gleba",
-    "analytes": "Gazów glebowych – Pustynia Błędowska",
+    "analytes": "Gazy glebowe",
     "quality": "FTIR – analiza gazów glebowych",
     "status": "podstawowa",
     "requiredIds": [
@@ -733,7 +732,7 @@ const materials = [
     "code": "I25",
     "name": "I25 - Przesiewowa analiza gazu procesowego – instalacja chemiczna",
     "matrix": "Gaz",
-    "analytes": "Gazu procesowego – instalacja chemiczna",
+    "analytes": "Skład gazu procesowego",
     "quality": "FTIR – analiza on-line",
     "status": "podstawowa",
     "requiredIds": [
@@ -748,7 +747,7 @@ const materials = [
     "code": "I26",
     "name": "I26 - Analiza składu gazów odlotowych z reaktora – zakład chemiczny Oświęcim",
     "matrix": "Gaz",
-    "analytes": "Składu gazów odlotowych",
+    "analytes": "Gazy odlotowe",
     "quality": "FTIR – analiza gazów procesowych",
     "status": "podstawowa",
     "requiredIds": [
@@ -763,7 +762,7 @@ const materials = [
     "code": "E27",
     "name": "E27 - Wielopierwiastkowa analiza gleby z terenu zurbanizowanego – Kraków",
     "matrix": "Gleba",
-    "analytes": "Gleby",
+    "analytes": "Pierwiastki śladowe",
     "quality": "ICP-OES – analiza wielopierwiastkowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -784,7 +783,7 @@ const materials = [
     "code": "E28",
     "name": "E28 - Wielopierwiastkowa analiza osadów dennych – rzeka Dunajec",
     "matrix": "Osady",
-    "analytes": "Osadów dennych – rzeka Dunajec",
+    "analytes": "Metale",
     "quality": "ICP-OES – analiza wielopierwiastkowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -805,7 +804,7 @@ const materials = [
     "code": "E29",
     "name": "E29 - Analiza składu pierwiastkowego popiołu – instalacja energetyczna",
     "matrix": "Popiół",
-    "analytes": "Składu pierwiastkowego popiołu – instalacja energetyczna",
+    "analytes": "Pierwiastki",
     "quality": "ICP-OES – analiza pierwiastkowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -824,7 +823,7 @@ const materials = [
     "code": "I30",
     "name": "I30 - Kontrola metali w ścieku przemysłowym po oczyszczaniu",
     "matrix": "Ściek",
-    "analytes": "Metali",
+    "analytes": "Metale",
     "quality": "ICP-OES – analiza wielopierwiastkowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -842,7 +841,7 @@ const materials = [
     "code": "I31",
     "name": "I31 - Wielopierwiastkowa analiza wody technologicznej – obieg zamknięty",
     "matrix": "Woda",
-    "analytes": "Wody technologicznej – obieg zamknięty",
+    "analytes": "Pierwiastki",
     "quality": "ICP-OES – analiza wielopierwiastkowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -860,7 +859,7 @@ const materials = [
     "code": "I32",
     "name": "I32 - Analiza pierwiastkowa koncentratu procesowego – zakład przeróbczy",
     "matrix": "Koncentrat",
-    "analytes": "Pierwiastkowa koncentratu procesowego – zakład przeróbczy",
+    "analytes": "Pierwiastki",
     "quality": "ICP-OES – analiza pierwiastkowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -880,7 +879,7 @@ const materials = [
     "code": "E33",
     "name": "E33 - Oznaczenie metali w biomasie odpadowej – instalacja energetyczna",
     "matrix": "Biomasa",
-    "analytes": "Metali",
+    "analytes": "Metale",
     "quality": "ICP-OES – analiza wielopierwiastkowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -900,7 +899,7 @@ const materials = [
     "code": "I34",
     "name": "I34 - Kontrola składu pierwiastkowego surowca wtórnego – linia recyklingu",
     "matrix": "Surowiec wtórny",
-    "analytes": "Składu pierwiastkowego surowca wtórnego – linia recyklingu",
+    "analytes": "Pierwiastki śladowe",
     "quality": "ICP-OES – analiza wielopierwiastkowa",
     "status": "podstawowa",
     "requiredIds": [
@@ -937,7 +936,7 @@ const materials = [
     "code": "E36",
     "name": "E36 - Analiza emisji LZO z osadów ściekowych",
     "matrix": "Ściek",
-    "analytes": "Emisji LZO",
+    "analytes": "LZO",
     "quality": "GC-MS-TD – headspace, sorbent, TD-GC-MS",
     "status": "podstawowa",
     "requiredIds": [
@@ -1040,7 +1039,7 @@ const materials = [
     "code": "E42",
     "name": "E42 - Oznaczenie ołowiu w glebie zurbanizowanej",
     "matrix": "Gleba",
-    "analytes": "Ołowiu",
+    "analytes": "Ołów",
     "quality": "AAS – Pb po mineralizacji gleby",
     "status": "podstawowa",
     "requiredIds": [
@@ -1061,7 +1060,7 @@ const materials = [
     "code": "E43",
     "name": "E43 - Oznaczenie kadmu w osadach dennych",
     "matrix": "Osady",
-    "analytes": "Kadmu",
+    "analytes": "Kadm",
     "quality": "AAS – Cd po mineralizacji osadów",
     "status": "podstawowa",
     "requiredIds": [
@@ -1082,7 +1081,7 @@ const materials = [
     "code": "E44",
     "name": "E44 - Oznaczenie ołowiu w popiele",
     "matrix": "Próbka środowiskowa",
-    "analytes": "Ołowiu",
+    "analytes": "Ołów",
     "quality": "AAS – Pb po mineralizacji popiołu",
     "status": "podstawowa",
     "requiredIds": [
@@ -1101,7 +1100,7 @@ const materials = [
     "code": "I45",
     "name": "I45 - Oznaczenie niklu w ścieku po oczyszczaniu",
     "matrix": "Ściek",
-    "analytes": "Niklu",
+    "analytes": "Nikiel",
     "quality": "AAS – Ni po mineralizacji cieczy",
     "status": "podstawowa",
     "requiredIds": [
@@ -1120,7 +1119,7 @@ const materials = [
     "code": "I46",
     "name": "I46 - Oznaczenie miedzi w wodzie technologicznej",
     "matrix": "Woda",
-    "analytes": "Miedzi",
+    "analytes": "Miedź",
     "quality": "AAS – Cu po mineralizacji cieczy",
     "status": "podstawowa",
     "requiredIds": [
@@ -1139,7 +1138,7 @@ const materials = [
     "code": "I47",
     "name": "I47 - Oznaczenie cynku w koncentracie procesowym",
     "matrix": "Próbka środowiskowa",
-    "analytes": "Cynku",
+    "analytes": "Cynk",
     "quality": "AAS – Zn po mineralizacji koncentratu",
     "status": "podstawowa",
     "requiredIds": [
@@ -1159,7 +1158,7 @@ const materials = [
     "code": "E48",
     "name": "E48 - Oznaczenie kadmu w biomasie odpadowej",
     "matrix": "Biomasa",
-    "analytes": "Kadmu",
+    "analytes": "Kadm",
     "quality": "AAS – Cd po mineralizacji biomasy",
     "status": "podstawowa",
     "requiredIds": [
@@ -1179,7 +1178,7 @@ const materials = [
     "code": "I49",
     "name": "I49 - Oznaczenie ołowiu w surowcu wtórnym",
     "matrix": "Surowiec wtórny",
-    "analytes": "Ołowiu",
+    "analytes": "Ołów",
     "quality": "AAS – Pb po mineralizacji materiału stałego",
     "status": "podstawowa",
     "requiredIds": [
@@ -1199,7 +1198,7 @@ const materials = [
     "code": "E50",
     "name": "E50 - Przesiewowa ocena LZO w powietrzu glebowym",
     "matrix": "Gleba",
-    "analytes": "Przesiewowa ocena LZO",
+    "analytes": "LZO",
     "quality": "FTIR – przesiewowa analiza pasm organicznych",
     "status": "podstawowa",
     "requiredIds": [
@@ -1215,7 +1214,7 @@ const materials = [
     "code": "E51",
     "name": "E51 - Przesiewowa ocena emisji organicznych z osadów ściekowych",
     "matrix": "Ściek",
-    "analytes": "Przesiewowa ocena emisji organicznych",
+    "analytes": "Związki organiczne",
     "quality": "FTIR – przesiewowa analiza gazów organicznych",
     "status": "podstawowa",
     "requiredIds": [
@@ -1231,7 +1230,7 @@ const materials = [
     "code": "E52",
     "name": "E52 - Przesiewowa ocena gazów porowych składowiska",
     "matrix": "Gaz",
-    "analytes": "Przesiewowa ocena gazów porowych składowiska",
+    "analytes": "Gazy porowe",
     "quality": "FTIR – przesiewowa analiza pasm organicznych",
     "status": "podstawowa",
     "requiredIds": [
@@ -1254,11 +1253,14 @@ const showAnswerBtn = document.querySelector("#showAnswerBtn");
 const answerList = document.querySelector("#answerList");
 const matrixText = document.querySelector("#matrixText");
 const analytesText = document.querySelector("#analytesText");
+const analyteNote = document.querySelector("#analyteNote");
 const searchInput = document.querySelector("#searchInput");
 const scoreRing = document.querySelector("#scoreRing");
 const scoreValue = document.querySelector("#scoreValue");
 const feedbackList = document.querySelector("#feedbackList");
 const verdictBadge = document.querySelector("#verdictBadge");
+const celebration = document.querySelector("#celebration");
+const celebrationBurst = document.querySelector("#celebrationBurst");
 
 let activeReservoir = reservoirs[0].id;
 let activeBoardStage = "measurement";
@@ -1269,6 +1271,104 @@ function getScenario() {
   return scenarios.find((scenario) => scenario.id === scenarioSelect.value) ?? scenarios[0];
 }
 
+const scenarioExplanations = {
+  "E1": "Pomiar pH w wodzie rzecznej pozwala szybko ocenić warunki kwasowo-zasadowe środowiska, które wpływają na mobilność metali, formy chemiczne składników rozpuszczonych oraz przebieg procesów biologicznych. Jest to podstawowy parametr wstępnej oceny jakości wody powierzchniowej.",
+  "E2": "Pomiar przewodności elektrolitycznej w wodzie gruntowej pozwala ocenić ogólną mineralizację i zawartość jonów rozpuszczonych. W rejonach oddziaływania przemysłu lub eksploatacji surowców parametr ten pomaga wykrywać zmiany składu wody, zasolenie lub dopływ zanieczyszczeń nieorganicznych.",
+  "E3": "Pomiar pH w wodzie zbiornikowej pozwala ocenić stabilność warunków chemicznych wpływających na życie organizmów wodnych, równowagę węglanową oraz możliwość występowania procesów eutrofizacji. Jest to parametr pomocny przy wstępnej kwalifikacji jakości wody.",
+  "I4": "Pomiar pH ścieku technologicznego pozwala kontrolować, czy odczyn mieści się w zakresie bezpiecznym dla dalszego oczyszczania, neutralizacji lub odprowadzenia ścieku. Zbyt kwaśny albo zbyt zasadowy ściek może zakłócać procesy oczyszczania i zwiększać mobilność niektórych zanieczyszczeń.",
+  "I5": "Pomiar przewodności wody obiegowej pozwala kontrolować wzrost zawartości soli rozpuszczonych, który może sprzyjać korozji, osadzaniu kamienia i zaburzeniom pracy obiegu technologicznego. Jest to szybki wskaźnik stabilności jakości wody w instalacji.",
+  "I6": "Oznaczanie wybranych jonów w ścieku laboratoryjnym pozwala ocenić skład nieorganiczny próbki oraz sprawdzić, czy ściek może wymagać neutralizacji, rozcieńczenia lub dodatkowego oczyszczania. Wynik ma znaczenie dla kontroli bezpieczeństwa odprowadzania ścieków z laboratoriów.",
+  "E7": "Pomiar przewodności wody rzecznej pozwala szybko wykryć zmiany mineralizacji związane ze spływem powierzchniowym, dopływem ścieków lub zmianą charakteru zasilania rzeki. Parametr ten jest wskaźnikowy i nie identyfikuje pojedynczych jonów.",
+  "E8": "Oznaczanie azotanów w wodzie powierzchniowej pozwala ocenić dopływ związków azotu pochodzących m.in. ze spływu rolniczego, ścieków komunalnych i odpływu z terenów zurbanizowanych. Wynik jest ważny przy ocenie presji biogennej i ryzyka eutrofizacji.",
+  "E8A": "Oznaczanie azotanów w wodzie powierzchniowej pozwala ocenić dopływ związków azotu pochodzących m.in. ze spływu rolniczego, ścieków komunalnych i odpływu z terenów zurbanizowanych. Wynik jest ważny przy ocenie presji biogennej i ryzyka eutrofizacji.",
+  "E9": "Oznaczanie fosforanów w wodzie zbiornika pozwala ocenić dopływ biodostępnych form fosforu, które mogą ograniczać lub nasilać eutrofizację. Wynik jest istotny przy ocenie ryzyka zakwitów glonów i zmian jakości wody retencjonowanej.",
+  "E10": "Oznaczanie żelaza ogólnego w wodzie gruntowej pozwala ocenić jej przydatność użytkową i potrzebę uzdatniania. Podwyższona zawartość żelaza może powodować barwę, mętność, osady oraz problemy eksploatacyjne w instalacjach wodnych.",
+  "E10A": "Oznaczanie żelaza ogólnego w wodzie gruntowej pozwala ocenić jej przydatność użytkową i potrzebę uzdatniania. Podwyższona zawartość żelaza może powodować barwę, mętność, osady oraz problemy eksploatacyjne w instalacjach wodnych.",
+  "E10B": "Oznaczanie żelaza ogólnego w wodzie gruntowej pozwala ocenić jej przydatność użytkową i potrzebę uzdatniania. Podwyższona zawartość żelaza może powodować barwę, mętność, osady oraz problemy eksploatacyjne w instalacjach wodnych.",
+  "I11": "Oznaczanie fenoli w ścieku przemysłowym służy kontroli zanieczyszczeń organicznych typowych dla części procesów chemicznych, koksowniczych i petrochemicznych. Wynik pozwala ocenić skuteczność oczyszczania oraz ryzyko toksycznego oddziaływania ścieku.",
+  "I12": "Oznaczanie chromu(VI) w ścieku z galwanizerni jest istotne, ponieważ ta forma chromu cechuje się wysoką toksycznością i mobilnością. Wynik pozwala kontrolować proces technologiczny, skuteczność redukcji lub oczyszczania oraz ryzyko wprowadzania chromu(VI) do środowiska.",
+  "E13": "Pomiar barwy wody po uzdatnianiu pozwala ocenić skuteczność usuwania substancji wpływających na wygląd wody, takich jak związki humusowe, żelazo, mangan lub produkty procesów technologicznych. Parametr ma znaczenie dla kontroli jakości użytkowej wody.",
+  "I14": "Pomiar absorbancji UV254 w wodzie obiegowej jest przesiewowym wskaźnikiem obecności frakcji związków organicznych absorbujących UV, zwłaszcza związków aromatycznych lub produktów degradacji materiałów organicznych. Parametr pomaga kontrolować zmiany jakości wody obiegowej, ale nie identyfikuje pojedynczych związków.",
+  "E15": "Oznaczanie manganu w wodzie surowej pozwala ocenić potrzebę i skuteczność odmanganiania przed podaniem wody do sieci. Podwyższone stężenie manganu może powodować przebarwienia, osady oraz problemy eksploatacyjne w instalacjach wodociągowych.",
+  "E15A": "Oznaczanie manganu w wodzie surowej pozwala ocenić potrzebę i skuteczność odmanganiania przed podaniem wody do sieci. Podwyższone stężenie manganu może powodować przebarwienia, osady oraz problemy eksploatacyjne w instalacjach wodociągowych.",
+  "E15B": "Oznaczanie manganu w wodzie surowej pozwala ocenić potrzebę i skuteczność odmanganiania przed podaniem wody do sieci. Podwyższone stężenie manganu może powodować przebarwienia, osady oraz problemy eksploatacyjne w instalacjach wodociągowych.",
+  "E17": "Oznaczanie ołowiu w glebie miejskiej lub na terenie zielonym pozwala ocenić trwałe zanieczyszczenie związane z presją komunikacyjną, przemysłową lub historycznym użytkowaniem terenu. Wynik jest ważny przy ocenie bezpieczeństwa użytkowania terenu przez ludzi.",
+  "E17A": "Oznaczanie ołowiu w glebie miejskiej lub na terenie zielonym pozwala ocenić trwałe zanieczyszczenie związane z presją komunikacyjną, przemysłową lub historycznym użytkowaniem terenu. Wynik jest ważny przy ocenie bezpieczeństwa użytkowania terenu przez ludzi.",
+  "E18": "Oznaczanie kadmu w osadach dennych pozwala ocenić kumulację toksycznego metalu śladowego w materiale osadowym, który może stanowić wtórne źródło zanieczyszczenia wód. Wynik jest istotny przy ocenie presji przemysłowej i jakości środowiska wodnego.",
+  "E18A": "Oznaczanie kadmu w osadach dennych pozwala ocenić kumulację toksycznego metalu śladowego w materiale osadowym, który może stanowić wtórne źródło zanieczyszczenia wód. Wynik jest istotny przy ocenie presji przemysłowej i jakości środowiska wodnego.",
+  "E19": "Oznaczanie cynku w glebie rolniczej pozwala ocenić wpływ nawożenia, środków ochrony roślin, osadów ściekowych lub dopływu zanieczyszczeń przemysłowych. Cynk jest mikroelementem, ale jego podwyższona zawartość może wskazywać na nadmierne obciążenie gleby metalami.",
+  "E19A": "Oznaczanie cynku w glebie rolniczej pozwala ocenić wpływ nawożenia, środków ochrony roślin, osadów ściekowych lub dopływu zanieczyszczeń przemysłowych. Cynk jest mikroelementem, ale jego podwyższona zawartość może wskazywać na nadmierne obciążenie gleby metalami.",
+  "I20": "Oznaczanie niklu w ścieku przemysłowym pozwala kontrolować obecność metalu związanego m.in. z obróbką metali, galwanizacją i procesami technologicznymi. Wynik jest ważny dla oceny skuteczności oczyszczania ścieku oraz ograniczenia emisji niklu do środowiska.",
+  "I20A": "Oznaczanie niklu w ścieku przemysłowym pozwala kontrolować obecność metalu związanego m.in. z obróbką metali, galwanizacją i procesami technologicznymi. Wynik jest ważny dla oceny skuteczności oczyszczania ścieku oraz ograniczenia emisji niklu do środowiska.",
+  "I21": "Oznaczanie miedzi w ścieku z galwanizerni pozwala kontrolować straty metalu z procesu oraz skuteczność oczyszczania ścieków technologicznych. Wynik ma znaczenie dla ograniczania toksycznego oddziaływania miedzi na środowisko wodne.",
+  "I21A": "Oznaczanie miedzi w ścieku z galwanizerni pozwala kontrolować straty metalu z procesu oraz skuteczność oczyszczania ścieków technologicznych. Wynik ma znaczenie dla ograniczania toksycznego oddziaływania miedzi na środowisko wodne.",
+  "I22": "Identyfikacja składników gazowych w spalinach kotła pozwala ocenić charakter procesu spalania, obecność produktów niecałkowitego spalania oraz ogólną stabilność pracy źródła ciepła. Jest to etap diagnostyczny wspierający dalszą kontrolę emisji.",
+  "I23": "Identyfikacja składników gazowych w emisji z instalacji technologicznej pozwala rozpoznać dominujące składniki strumienia gazowego i wykryć odchylenia od normalnej pracy procesu. Wynik wspiera ocenę bezpieczeństwa procesu i potrzebę dalszych analiz szczegółowych.",
+  "E24": "Analiza gazów glebowych pozwala rozpoznać warunki tlenowe, aktywność procesów biologicznych oraz ewentualną migrację substancji lotnych w gruncie. W matrycy glebowej wynik ma charakter diagnostyczny i pomaga wskazać miejsca wymagające dokładniejszych badań.",
+  "I25": "Przesiewowa analiza gazu procesowego pozwala ocenić skład mieszaniny gazowej powstającej lub wykorzystywanej w instalacji chemicznej. Wynik umożliwia szybkie wykrycie zmian składu, obecności niepożądanych składników lub niestabilnej pracy procesu.",
+  "I26": "Analiza gazów odlotowych z reaktora pozwala ocenić skład strumienia opuszczającego instalację oraz rozpoznać produkty reakcji, uboczne składniki gazowe i potencjalne źródła emisji. Wynik wspiera diagnostykę procesu i ocenę oddziaływania instalacji na środowisko.",
+  "E27": "Wielopierwiastkowa analiza gleby miejskiej pozwala ocenić zanieczyszczenie metalami i metaloidami pochodzącymi z komunikacji, przemysłu, pyłów atmosferycznych lub historycznego użytkowania terenu. Wynik wspiera ocenę jakości gleby i potencjalnego ryzyka środowiskowego.",
+  "E28": "Oznaczanie metali w osadach dennych pozwala ocenić kumulację zanieczyszczeń nieorganicznych w materiale osadowym. Osady mogą rejestrować długotrwałą presję zlewni i stanowić wtórne źródło metali dla środowiska wodnego.",
+  "E29": "Analiza składu pierwiastkowego popiołu pozwala ocenić jego właściwości chemiczne, potencjalne zanieczyszczenie metalami oraz możliwość dalszego zagospodarowania lub konieczność traktowania jako odpadu wymagającego kontroli.",
+  "I30": "Kontrola metali w ścieku po oczyszczaniu pozwala ocenić skuteczność procesu usuwania zanieczyszczeń nieorganicznych przed odprowadzeniem ścieku. Wynik wskazuje, czy oczyszczanie ogranicza emisję metali do środowiska wodnego.",
+  "I31": "Wielopierwiastkowa analiza wody technologicznej w obiegu zamkniętym pozwala kontrolować narastanie składników nieorganicznych, które mogą powodować korozję, osady, zanieczyszczenie produktu lub zaburzenia procesu.",
+  "I32": "Analiza pierwiastkowa koncentratu procesowego pozwala ocenić skład surowca lub półproduktu, zawartość składników użytecznych oraz obecność pierwiastków niepożądanych. Wynik wspiera kontrolę jakości i decyzje dotyczące dalszego przerobu.",
+  "E33": "Oznaczanie metali w biomasie odpadowej pozwala ocenić jej przydatność do wykorzystania energetycznego oraz ryzyko wprowadzania metali do popiołów i emisji. Wynik wspiera decyzję o bezpiecznym zagospodarowaniu biomasy.",
+  "I34": "Kontrola pierwiastków śladowych w surowcu wtórnym pozwala ocenić obecność zanieczyszczeń metalicznych, które mogą ograniczać recykling, pogarszać jakość produktu lub wymagać dodatkowego oczyszczania strumienia materiałowego.",
+  "E35": "Oznaczanie LZO w powietrzu glebowym pozwala wykryć lotne zanieczyszczenia organiczne migrujące w strefie aeracji gruntu. Wynik jest przydatny do lokalizacji ognisk zanieczyszczenia, oceny migracji par i planowania dalszych badań terenu poprzemysłowego.",
+  "E36": "Analiza LZO emitowanych z osadów ściekowych pozwala ocenić obecność lotnych związków organicznych uwalnianych podczas magazynowania, stabilizacji lub przetwarzania osadów. Wynik ma znaczenie dla oceny uciążliwości zapachowej, ryzyka emisji i bezpieczeństwa procesu.",
+  "E37": "Oznaczanie LZO w gazach porowych składowiska pozwala ocenić obecność lotnych zanieczyszczeń organicznych przemieszczających się w przestrzeniach porowych odpadów i gruntu. Wynik pomaga rozpoznać migrację zanieczyszczeń i ryzyko emisji do atmosfery.",
+  "I38": "Oznaczanie LZO w emisji z instalacji technologicznej pozwala kontrolować uwalnianie lotnych związków organicznych z procesu produkcyjnego. Wynik jest ważny przy ocenie skuteczności ograniczania emisji, strat rozpuszczalników i oddziaływania instalacji na otoczenie.",
+  "E39": "Oznaczanie LZO w gazach glebowych pozwala ocenić obecność lotnych zanieczyszczeń organicznych w gruncie oraz ich potencjalną migrację w kierunku powierzchni lub obiektów budowlanych. Wynik jest ważny w rozpoznaniu terenów zanieczyszczonych.",
+  "I40": "Oznaczanie LZO w gazie procesowym pozwala kontrolować skład lotnych związków organicznych obecnych w strumieniu technologicznym. Wynik pomaga ocenić stabilność procesu, straty surowców organicznych lub obecność niepożądanych produktów ubocznych.",
+  "I41": "Oznaczanie LZO w gazach odlotowych z reaktora pozwala ocenić, czy lotne związki organiczne opuszczają układ reakcyjny wraz ze strumieniem gazowym. Wynik wspiera kontrolę procesu, ocenę emisji oraz dobór lub ocenę skuteczności układów oczyszczania gazów.",
+  "E42": "Oznaczanie ołowiu w glebie zurbanizowanej pozwala ocenić trwałe zanieczyszczenie związane z presją komunikacyjną, przemysłową lub historycznym użytkowaniem terenu. Wynik jest ważny przy ocenie bezpieczeństwa użytkowania terenu przez ludzi.",
+  "E43": "Oznaczanie kadmu w osadach dennych pozwala ocenić kumulację toksycznego metalu śladowego w materiale osadowym, który może stanowić wtórne źródło zanieczyszczenia wód. Wynik jest istotny przy ocenie presji przemysłowej i jakości środowiska wodnego.",
+  "E44": "Oznaczanie ołowiu w popiele pozwala ocenić koncentrację toksycznego metalu w pozostałości po procesie spalania. Wynik jest istotny dla klasyfikacji odpadu, oceny możliwości zagospodarowania oraz ryzyka uwalniania ołowiu do środowiska.",
+  "I45": "Oznaczanie niklu w ścieku po oczyszczaniu pozwala sprawdzić, czy proces oczyszczania skutecznie ograniczył zawartość tego metalu przed odprowadzeniem ścieku. Wynik jest ważny dla kontroli emisji niklu do środowiska wodnego.",
+  "I46": "Oznaczanie miedzi w wodzie technologicznej pozwala kontrolować obecność metalu pochodzącego z korozji instalacji, procesów technologicznych lub zanieczyszczenia obiegu. Wynik ma znaczenie dla ochrony urządzeń, jakości procesu i ograniczania emisji metali.",
+  "I47": "Oznaczanie cynku w koncentracie procesowym pozwala określić zawartość składnika technologicznie istotnego lub zanieczyszczającego, zależnie od charakteru procesu. Wynik wspiera ocenę jakości koncentratu, jego dalszego przerobu lub wartości surowcowej.",
+  "E48": "Oznaczanie kadmu w biomasie odpadowej pozwala ocenić, czy materiał może być bezpiecznie zagospodarowany, np. energetycznie lub materiałowo. Kadm może przechodzić do popiołu lub emisji, dlatego jego kontrola jest ważna przy ocenie ryzyka środowiskowego.",
+  "I49": "Oznaczanie ołowiu w surowcu wtórnym pozwala ocenić obecność toksycznego metalu, który może ograniczać recykling, pogarszać jakość produktu lub wymagać separacji zanieczyszczonej frakcji. Wynik wspiera decyzję o dalszym zagospodarowaniu materiału.",
+  "E50": "Przesiewowa ocena LZO w powietrzu glebowym pozwala wykryć obecność lotnych zanieczyszczeń organicznych migrujących w strefie aeracji gruntu. Wynik wskazuje, czy teren wymaga dokładniejszej identyfikacji i ilościowego oznaczania związków.",
+  "E51": "Przesiewowa ocena emisji organicznych z osadów ściekowych pozwala sprawdzić, czy podczas magazynowania lub przetwarzania osadów uwalniają się lotne lub półlotne związki organiczne. Wynik wskazuje, czy potrzebna jest dokładniejsza identyfikacja składników emisji.",
+  "E52": "Analiza gazów porowych składowiska pozwala ocenić skład gazów przemieszczających się w porach odpadów i gruntu. Wynik pomaga rozpoznać aktywność procesów rozkładu, migrację substancji lotnych oraz potencjalne ryzyko emisji poza obszar składowiska."
+};
+
+const analyteExplanations = {
+  "Odczyn pH": "Pomiar pH pozwala szybko ocenić, czy próbka ma odczyn sprzyjający migracji zanieczyszczeń lub zaburzeniom procesów technologicznych. Jest to podstawowy parametr kontroli wód i ścieków.",
+  "Przewodność elektrolityczna": "Przewodność informuje o ogólnej mineralizacji próbki i obecności jonów rozpuszczonych. Pomaga szybko wychwycić dopływ zanieczyszczeń lub zmianę charakteru wody.",
+  "Jony": "Oznaczanie wybranych jonów pozwala kontrolować skład chemiczny próbki i skuteczność neutralizacji lub oczyszczania. Wynik wskazuje, czy dany jon może przekraczać poziom dopuszczalny.",
+  "Azotany": "Azotany są wskaźnikiem presji rolniczej, ściekowej i eutrofizacji wód. Ich oznaczanie pomaga ocenić jakość wody oraz ryzyko nadmiernego dopływu biogenów.",
+  "Fosforany": "Fosforany są jednym z kluczowych czynników eutrofizacji zbiorników wodnych. Ich pomiar pozwala ocenić ryzyko zakwitów i dopływ zanieczyszczeń biogennych.",
+  "Żelazo ogólne": "Żelazo wpływa na barwę, smak i przydatność technologiczną wody. Jego oznaczanie pomaga ocenić jakość ujęcia oraz potrzebę uzdatniania.",
+  "Fenole": "Fenole są toksycznymi zanieczyszczeniami organicznymi często związanymi z działalnością przemysłową. Ich pomiar służy kontroli skuteczności oczyszczania ścieków.",
+  "Chrom(VI)": "Chrom(VI) jest formą chromu o wysokiej toksyczności i mobilności. Oznacza się go szczególnie w ściekach przemysłowych, aby kontrolować proces i ograniczać ryzyko środowiskowe.",
+  "Barwa wody": "Barwa wody jest wskaźnikiem obecności substancji naturalnych lub produktów ubocznych procesów technologicznych. Pomiar pozwala ocenić skuteczność uzdatniania i jakość wizualną wody.",
+  "Związki organiczne absorbujące UV": "Absorbancja UV254 jest szybkim wskaźnikiem obecności związków organicznych w wodzie. Pomaga w przesiewowej kontroli zmian jakości i pracy instalacji.",
+  "Mangan": "Mangan wpływa na jakość użytkową wody i może powodować problemy w procesach uzdatniania. Jego oznaczanie pomaga zdecydować, czy potrzebne są dodatkowe etapy oczyszczania.",
+  "Ołów": "Ołów jest toksycznym metalem ciężkim, który może kumulować się w środowisku i organizmach. Jego pomiar służy ocenie ryzyka środowiskowego i bezpieczeństwa terenów użytkowanych przez ludzi.",
+  "Kadm": "Kadm jest toksycznym metalem śladowym o dużym znaczeniu środowiskowym. Oznacza się go w glebach, osadach i materiałach odpadowych, aby ocenić stopień zanieczyszczenia.",
+  "Cynk": "Cynk jest pierwiastkiem potrzebnym biologicznie, ale w podwyższonych stężeniach wskazuje na presję przemysłową lub rolniczą. Jego oznaczanie pomaga ocenić wpływ nawożenia i zanieczyszczeń.",
+  "Nikiel": "Nikiel jest metalem związanym m.in. z przemysłem metalowym i ściekami technologicznymi. Pomiar pozwala kontrolować skuteczność oczyszczania i ryzyko wprowadzania metali do środowiska.",
+  "Miedź": "Miedź może pochodzić z procesów galwanicznych, instalacji technicznych i materiałów odpadowych. Jej oznaczanie jest ważne przy kontroli ścieków oraz ocenie wpływu przemysłu.",
+  "Składniki gazowe": "Identyfikacja składników gazowych pozwala ocenić charakter emisji i stabilność procesu spalania lub technologii. Jest to szybki etap diagnostyczny przed analizami szczegółowymi.",
+  "Gazy glebowe": "Analiza gazów glebowych pomaga rozpoznać warunki biogeochemiczne oraz obecność zanieczyszczeń lotnych. Wynik może wskazać miejsca wymagające dokładniejszych badań.",
+  "Skład gazu procesowego": "Pomiar składu gazu procesowego służy kontroli stabilności instalacji i identyfikacji dominujących składników. Pomaga szybko wykrywać odchylenia od normalnej pracy procesu.",
+  "Gazy odlotowe": "Analiza gazów odlotowych pozwala ocenić emisje z reaktora lub instalacji przemysłowej. Wyniki wspierają diagnostykę procesu i kontrolę oddziaływania na środowisko.",
+  "Pierwiastki śladowe": "Oznaczanie pierwiastków śladowych pozwala ocenić zanieczyszczenie środowiska metalami i metaloidami. Jest szczególnie przydatne przy analizie gleb, surowców i odpadów.",
+  "Pierwiastki": "Analiza pierwiastkowa określa skład próbki i wspiera decyzje o jej klasyfikacji, przetwarzaniu lub zagospodarowaniu. Jest używana dla materiałów stałych i wód technologicznych.",
+  "Metale": "Oznaczanie metali pozwala ocenić obciążenie próbki zanieczyszczeniami nieorganicznymi. Wyniki są ważne dla kontroli ścieków, odpadów, gleb i osadów.",
+  "LZO": "Lotne związki organiczne łatwo migrują do powietrza i mogą wskazywać na zanieczyszczenia przemysłowe lub składowiskowe. Ich oznaczanie pomaga ocenić ryzyko emisji i rozprzestrzeniania się zanieczyszczeń.",
+  "Związki organiczne": "Związki organiczne w emisjach lub próbkach środowiskowych mogą świadczyć o procesach przemysłowych, rozkładzie materiału albo zanieczyszczeniu. Pomiar przesiewowy wskazuje, czy potrzebna jest analiza dokładniejsza.",
+  "Gazy porowe": "Gazy porowe pokazują, jakie substancje lotne przemieszczają się w przestrzeniach gruntu lub składowiska. Ich ocena pomaga rozpoznać kierunki migracji zanieczyszczeń."
+};
+
+function explanationForScenario(scenario) {
+  return scenarioExplanations[scenario.id]
+    ?? analyteExplanations[scenario.analytes]
+    ?? "Pomiar tego parametru pomaga ocenić skład próbki i wskazać, czy wymaga ona dalszej kontroli. Wynik wspiera dobór właściwej metody analitycznej i interpretację ryzyka środowiskowego.";
+}
 function selectedItems() {
   return selectedEntries
     .map((entry) => ({ ...materials.find((item) => item.id === entry.id), placedStage: entry.stage }))
@@ -1288,6 +1388,7 @@ function renderScenario() {
   const scenario = getScenario();
   matrixText.textContent = scenario.matrix;
   analytesText.textContent = scenario.analytes;
+  analyteNote.innerHTML = `<strong>Po co mierzymy:</strong> ${explanationForScenario(scenario)}`;
   hideAnswers();
   clearEvaluation();
 }
@@ -1374,6 +1475,14 @@ function removeElement(id) {
   clearEvaluation();
 }
 
+function moveElement(id, stageId) {
+  const entry = selectedEntries.find((selectedEntry) => selectedEntry.id === id);
+  if (!entry) return;
+  entry.stage = stageId;
+  renderBoard();
+  clearEvaluation();
+}
+
 function renderBoard() {
   const stageTemplate = document.querySelector("#stageTemplate");
   const selectedTemplate = document.querySelector("#selectedTemplate");
@@ -1403,10 +1512,18 @@ function renderBoard() {
 
     items.forEach((item) => {
       const node = selectedTemplate.content.firstElementChild.cloneNode(true);
+      node.draggable = true;
+      node.dataset.id = item.id;
       node.querySelector(".selected-art").innerHTML = drawingSet[item.drawing];
       node.querySelector("h3").textContent = item.name;
       node.querySelector("p").textContent = item.desc;
       node.querySelector(".remove-button").addEventListener("click", () => removeElement(item.id));
+      node.addEventListener("dragstart", (event) => {
+        event.dataTransfer.setData("text/plain", item.id);
+        event.dataTransfer.setData("application/x-board-item", item.id);
+        node.classList.add("dragging");
+      });
+      node.addEventListener("dragend", () => node.classList.remove("dragging"));
       dropzone.append(node);
     });
 
@@ -1420,7 +1537,12 @@ function renderBoard() {
       stageNode.classList.remove("over");
       const id = event.dataTransfer.getData("text/plain");
       const item = materials.find((material) => material.id === id);
-      if (item) addElement(id, stage.id);
+      if (!item) return;
+      if (event.dataTransfer.types.includes("application/x-board-item")) {
+        moveElement(id, stage.id);
+      } else {
+        addElement(id, stage.id);
+      }
     });
 
     methodBoard.append(stageNode);
@@ -1440,6 +1562,10 @@ function feedbackNode(type, title, body) {
 function stageForItem(id) {
   const item = materials.find((material) => material.id === id);
   return stages.find((stage) => stage.id === item?.defaultStage);
+}
+
+function acceptedStagesForItem(item) {
+  return item?.acceptedStages ?? [item?.defaultStage];
 }
 
 function categoryLabel(category, plural = true) {
@@ -1523,7 +1649,7 @@ function evaluate(showDetailed = true) {
     selectedEntries
       .filter((entry) => {
         const item = materials.find((material) => material.id === entry.id);
-        return item && entry.stage === item.defaultStage;
+        return item && acceptedStagesForItem(item).includes(entry.stage);
       })
       .map((entry) => entry.id)
   );
@@ -1531,7 +1657,7 @@ function evaluate(showDetailed = true) {
   const extra = selectedEntries
     .filter((entry) => {
       const item = materials.find((material) => material.id === entry.id);
-      return !required.has(entry.id) || entry.stage !== item?.defaultStage;
+      return !required.has(entry.id) || !acceptedStagesForItem(item).includes(entry.stage);
     });
   let score = 100 - missing.length * 12 - extra.length * 5;
   if (!selectedEntries.length) score = 0;
@@ -1547,6 +1673,33 @@ function evaluate(showDetailed = true) {
 
   if (!showDetailed && !items.length) return;
   renderFeedback({ missing, extra, score, scenario });
+  if (score === 100) showCelebration();
+}
+
+function showCelebration() {
+  if (!celebration || !celebrationBurst) return;
+
+  const colors = ["#0f766e", "#2563eb", "#f59e0b", "#be123c", "#7c3aed", "#16a34a"];
+  celebrationBurst.innerHTML = "";
+  celebration.hidden = false;
+
+  for (let i = 0; i < 54; i += 1) {
+    const piece = document.createElement("span");
+    const angle = (Math.PI * 2 * i) / 54;
+    const radius = 120 + Math.random() * 260;
+    piece.className = "confetti-piece";
+    piece.style.setProperty("--x", `${Math.cos(angle) * radius}px`);
+    piece.style.setProperty("--y", `${Math.sin(angle) * radius + 90}px`);
+    piece.style.setProperty("--r", `${Math.random() * 720 - 360}deg`);
+    piece.style.setProperty("--piece-color", colors[i % colors.length]);
+    piece.style.animationDelay = `${Math.random() * 280}ms`;
+    celebrationBurst.append(piece);
+  }
+
+  window.setTimeout(() => {
+    celebration.hidden = true;
+    celebrationBurst.innerHTML = "";
+  }, 3800);
 }
 
 function clearEvaluation() {
